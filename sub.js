@@ -8,7 +8,7 @@ const sub  = mqtt.connect("mqtt://localhost:9000");
 
 const mysql = require('mysql');
 const db = mysql.createConnection({
-	host: '192.168.1.101',
+	host: '192.168.1.15',
 	port: 3306,
 	user: 'gustavocastillo',
 	password: 'mqtt96',
@@ -22,13 +22,13 @@ db.connect((err)=>{
 	console.log('db connected!')
 })
 sub.on('connect',()=>{
-	sub.subscribe("topic test");
+	sub.subscribe("GetTemperature");
 })
 var count=0;
 sub.on('message',(topic, message)=>{
 	console.log(message.toString());
 	message = Math.round(message);
-	var sql ="insert into Temperatura (temperatura,fecha) values("+actual+",now())"
+	var sql ="insert into Temperatura (temperatura,fecha) values("+message+",now())"
 	count = count+1;
 	console.log("temp: ",message )
 	if(actual!=message){

@@ -10,7 +10,7 @@ const pub = mqtt.connect('mqtt://localhost:9000');
 
 pub.on('connect',()=>{
     parser.on('data', (data)=>{
-        pub.publish('topic test', data);
+        pub.publish('GetTemperature', data);
         console.log("Temperatura:",data);
     })
     
