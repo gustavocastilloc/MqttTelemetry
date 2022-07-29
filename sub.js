@@ -28,26 +28,25 @@ sub.on('connect',()=>{
 	sub.subscribe("server2state");
 })
 var count=0;
-var temperature;
-var estadoServidor='Power OFF';
-var estadoServidor2;
+var temperature=0;
+//var estadoServidor1='Power Off';
+//var estadoServidor2='Power Off';
+var servidores = ["server1state","server2state","server3state","server4state"];
+var estados = new Array(4);
+var index;
+var cantEstados = new Array(10);
 sub.on('message',(topic, message)=>{
-	//console.log(message.toString());
-	if (topic === 'GetTemperature'){
+	
+	if(topic==="GetTemperature"){
 		temperature = Math.round(message);
 	}
-	if(topic === "server1state"){
-		estadoServidor = message.toString();
-		if(estadoServidor === 'Power ON'){
-			console.log("server 1 state: ",estadoServidor);
-		}else{
-			console.log("server 1 state: ", estadoServidor)
-		}
-	}
-	if(topic === "server1state"){
-		estadoServidor2 = message.toString();
-		console.log("server 2 state: ", estadoServidor2);
-	}
+	if(servidores.includes(topic) && topic!=="GetTemperature" ){
+		index= servidores.indexOf(topic);
+		estados[index]="ON";
+		
+	}else {for(let i in estados){estados[i]="off";}}
+	
+	console.log('topic: ', topic);
 	var sql ="insert into Temperatura (temperatura,fecha) values("+temperature+",now())"
 	count = count+1;
 	console.log("temp: ",temperature )
@@ -65,4 +64,11 @@ sub.on('message',(topic, message)=>{
             		console.log('update successfully. Entry number was: ' + resp);
         	}
     	});
+	//console.log("Server 1 state :",estados[0]);
+	//nsole.log("Server 2 state :",estados[1]);
+	for(let i in cantEstados){cantEstados[i]=estados[0]}
+	let est1 = cantEstados.filter(element => element==="ON");
+	console.log(est1)
+	if (est1.length>4){console.log("server1 on");}
+	est1.splice(1,9);
 })
