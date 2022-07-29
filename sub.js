@@ -9,7 +9,7 @@ const sub  = mqtt.connect("mqtt://"+broker_ip+":9000");
 
 const mysql = require('mysql');
 const db = mysql.createConnection({
-	host: '192.168.1.15',
+	host: '192.168.1.102',
 	port: 3306,
 	user: 'gustavocastillo',
 	password: 'mqtt96',
@@ -40,11 +40,11 @@ sub.on('message',(topic, message)=>{
 	if(topic==="GetTemperature"){
 		temperature = Math.round(message);
 	}
-	if(servidores.includes(topic) && topic!=="GetTemperature" ){
-		index= servidores.indexOf(topic);
-		estados[index]="ON";
+	//if(servidores.includes(topic) && topic!=="GetTemperature" ){
+	//	index= servidores.indexOf(topic);
+	//	estados[index]="ON";
 		
-	}else {for(let i in estados){estados[i]="off";}}
+	//}else {for(let i in estados){estados[i]="off";}}
 	
 	console.log('topic: ', topic);
 	var sql ="insert into Temperatura (temperatura,fecha) values("+temperature+",now())"
@@ -66,9 +66,9 @@ sub.on('message',(topic, message)=>{
     	});
 	//console.log("Server 1 state :",estados[0]);
 	//nsole.log("Server 2 state :",estados[1]);
-	for(let i in cantEstados){cantEstados[i]=estados[0]}
-	let est1 = cantEstados.filter(element => element==="ON");
-	console.log(est1)
-	if (est1.length>4){console.log("server1 on");}
-	est1.splice(1,9);
+	//for(let i in cantEstados){cantEstados[i]=estados[0]}
+	//let est1 = cantEstados.filter(element => element==="ON");
+	//console.log(est1)
+	//if (est1.length>4){console.log("server1 on");}
+	//est1.splice(1,9);
 })
